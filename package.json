@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write .",
+    "format": "prettier --write ./app",
     "neon:seed": "psql 'postgresql://neondb_owner:npg_o1ezW6nOtfaA@ep-muddy-sun-a50nb8ip-pooler.us-east-2.aws.neon.tech/neondb' -f ./app/scripts/seed.sql",
     "neon:migrate": "psql 'postgresql://neondb_owner:npg_o1ezW6nOtfaA@ep-muddy-sun-a50nb8ip-pooler.us-east-2.aws.neon.tech/neondb' -f ./app/scripts/seed.sql",
     "prepare": "husky"
@@ -40,6 +40,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
+    "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.3.3",
     "typescript": "^5"

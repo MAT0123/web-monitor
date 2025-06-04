@@ -1,12 +1,12 @@
-import sql from "@/app/lib/neon"
-import { type NextRequest, NextResponse } from "next/server"
-import { stackServerApp } from "@/stack"
+import sql from '@/app/lib/neon';
+import { type NextRequest, NextResponse } from 'next/server';
+import { stackServerApp } from '@/stack';
 
 export async function GET() {
   try {
-    const user = await stackServerApp.getUser()
+    const user = await stackServerApp.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const websites = await sql`
@@ -43,31 +43,40 @@ export async function GET() {
       FROM websites w
       WHERE w.user_id = ${user.id}
       ORDER BY w.created_at DESC
-    `
-    return NextResponse.json(websites)
+    `;
+    return NextResponse.json(websites);
   } catch (error) {
-    console.error("Failed to fetch websites:", error)
-    return NextResponse.json({ error: "Failed to fetch websites" }, { status: 500 })
+    console.error('Failed to fetch websites:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch websites' },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await stackServerApp.getUser()
+    const user = await stackServerApp.getUser();
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { name, url, email } = await req.json()
+    const { name, url, email } = await req.json();
 
     if (!name || !url || !email) {
-      return NextResponse.json({ error: "Name, URL, and email are required" }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Name, URL, and email are required' },
+        { status: 400 }
+      );
     }
 
     try {
-      new URL(url)
+      new URL(url);
     } catch {
-      return NextResponse.json({ error: "Invalid URL format" }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Invalid URL format' },
+        { status: 400 }
+      );
     }
 
     // Ensure the user exists in the users table
@@ -75,17 +84,20 @@ export async function POST(req: NextRequest) {
       INSERT INTO users (id, email, display_name)
       VALUES (${user.id}, ${user.primaryEmail}, ${user.displayName})
       ON CONFLICT (id) DO NOTHING
-    `
+    `;
 
     const result = await sql`
       INSERT INTO websites (name, url, email, user_id)
       VALUES (${name}, ${url}, ${email}, ${user.id})
       RETURNING *
-    `
+    `;
 
-    return NextResponse.json(result[0])
+    return NextResponse.json(result[0]);
   } catch (error) {
-    console.error("Failed to create website:", error)
-    return NextResponse.json({ error: "Failed to create website" }, { status: 500 })
+    console.error('Failed to create website:', error);
+    return NextResponse.json(
+      { error: 'Failed to create website' },
+      { status: 500 }
+    );
   }
 }

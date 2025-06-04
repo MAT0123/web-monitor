@@ -1,5 +1,5 @@
 import sql from '@/app/lib/neon';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 async function checkUptimeForAllUsers() {
     const websites = await sql`SELECT * FROM websites WHERE is_active = true`;
 
@@ -27,7 +27,10 @@ async function checkUptimeForAllUsers() {
     }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest): Promise<NextResponse> {
+    if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
+        return NextResponse.json({ "Rejected": "You are not authorized" }, { status: 401 })
+    }
     await checkUptimeForAllUsers();
     return NextResponse.json({ success: true });
 }

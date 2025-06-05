@@ -8,8 +8,6 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write ./app",
-    "neon:seed": "psql 'postgresql://neondb_owner:npg_o1ezW6nOtfaA@ep-muddy-sun-a50nb8ip-pooler.us-east-2.aws.neon.tech/neondb' -f ./app/scripts/seed.sql",
-    "neon:migrate": "psql 'postgresql://neondb_owner:npg_o1ezW6nOtfaA@ep-muddy-sun-a50nb8ip-pooler.us-east-2.aws.neon.tech/neondb' -f ./app/scripts/seed.sql",
     "prepare": "husky"
   },
   "dependencies": {
